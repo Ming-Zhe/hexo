@@ -1,0 +1,30 @@
+<!-- <% theme.widgets.forEach(function(widget){ %>
+  <%- partial('../_widget/' + widget) %>
+<% }); %> -->
+<div class="personal-info">
+  <figure>
+    <% if(theme.photo) { %>
+      <a href="<%- config.root %>">
+        <img class="personal-photo" src="<%- theme.photo %>" alt="<%- config.author %>">
+      </a>
+    <% } %>
+    <figcaption>
+      <h3 class=><%- config.author %></h3>
+      <p><%- theme.about %></p>
+    </figcaption>
+  </figure>
+  <section class="social">
+    <% if( theme.twitter.username ) { %>
+      <a target="_blank" class="icon twitter depth" href="http://twitter.com/<%- theme.twitter.username %>"></a>
+    <% } %>
+    <% if( theme.facebook ) { %>
+      <a target="_blank" class="icon facebook depth" href="http://fb.com/<%- theme.facebook %>"></a> 
+    <% } %>
+    <% if( theme.github) { %>
+      <a target="_blank" class="icon github depth" href="http://github.com/<%= theme.github %>"></a>
+    <% } %>
+    <% if( theme.email ) { %>
+      <a target="_blank" class="icon email depth" href="mailto:<%- theme.email %>"></a>
+    <% } %>
+  </section>
+</div>

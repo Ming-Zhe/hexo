@@ -1,0 +1,32 @@
+menu:
+  博客: /
+  #存档: /archives
+  关于: /about
+  #实验室: /lab
+  #简历: /resume
+
+widgets: 
+- category
+- weibo
+- blogroll
+- rss
+
+excerpt_link: Read More
+
+google_analytics: UA-45579943-3
+
+duoshuo: Ming-Zhe
+
+google_plus: 
+
+weibo_url: http://weibo.com/afmz
+twitter_url: https://twitter.com/MingZheGG
+github_url: https://github.com/ming-zhe
+#facebook_url: https://www.facebook.com/archyfilafs
+
+jiathis:
+  enable: true
+  id: 9566150
+  tsina: afmz
+
+rss: http://www.ming-zhe.me/atom.xml

@@ -1,0 +1,130 @@
+
+#sidebar
+  width 0
+  line-height 1.8em
+  position fixed
+  right 70%
+  top 0
+  left 0px
+  border-right solid 1px #2d2d2d
+  height 100%
+  background-color color-sidebar
+  background linear-gradient(top, #1f1f1f, #222)
+  box-shadow 1px 0 0 0 #222
+  @media screen and (max-width: 900px)
+    // float none
+    // width 100%
+    display none
+
+  .personal-info
+    color color-font2
+    position relative
+    text-align center
+    top 5%
+    display none
+    margin 0 auto
+    max-width 30%
+  .personal-info figure
+    border-bottom solid 1px #001
+  .social
+    border-top solid 1px #2d2d2d
+    width: 200px
+  .personal-photo
+    border-radius 150px
+    height 170px
+    width 170px
+    // border 5px solid white
+    // box-shadow 1px 2px 3px #333
+  .personal-name
+    font-size 1.5em
+  .icon
+    position relative
+    font 1.1em font-icon
+    margin 0 auto
+    padding 10px
+    top 25px
+    text-decoration none
+    color color-font
+    font-size 30px
+    &:hover
+      color color-font2
+  .github
+    &:before
+      content "\f09b"
+
+  .facebook
+    &:before
+      content "\f082"
+  .twitter
+    &:before
+      content "\f081"
+  .email
+    &:before
+      content "\f0e0"
+
+
+
+  .widget
+    background #fff
+    box-shadow 1px 2px 3px #ddd
+    margin-bottom 30px
+    word-wrap break-word
+    .title
+      padding 15px 20px
+      font-size 1em
+      border-bottom 1px solid color-border
+      font-weight normal
+
+    .entry
+      font-size 0.9em
+      padding 15px 20px
+
+    ul, ol, dl
+      list-style none
+      ul, ol, dl
+        list-style disc
+        margin-left 20px
+
+  .search
+    margin-bottom 30px
+    input
+      background #fff
+      font-family font-title
+      font-style italic
+      font-size 1em
+      padding 10px 15px
+      border 1px solid color-border
+      width 100%
+      box-sizing border-box
+      color color-meta
+      &:focus
+        color color-font
+
+  .tag
+    small
+      margin-left 15px
+      color color-meta
+      &:before
+        content '('
+      &:after
+        content ')'
+
+  .twitter
+    li
+      border-bottom 1px solid color-border
+      padding 15px 20px
+      font-size 0.9em
+      &:last-of-type
+        border-bottom none
+    small
+      display block
+      margin-top 10px
+      color color-meta
+      line-height 1
+
+  .tagcloud
+    .entry
+      padding-right 5px
+    a
+      margin-right 10px
+      display inline-block

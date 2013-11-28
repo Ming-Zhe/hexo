@@ -1,0 +1,36 @@
+menu:
+  Home: /
+  Archives: archives
+  page:
+    About: about
+
+widgets:
+- tag
+
+excerpt_link: Continue →
+
+mathjax: true
+fancybox: true
+print: true
+
+social:
+  twitter: true
+  github: true
+  gplus: true
+  rss: true
+
+twitter:
+  username:
+
+github:
+  username:
+
+gplus:
+  username:
+
+addit:
+  facebook: false
+  twitter: true
+  gplus: true
+  pinit: false
+  publid:
