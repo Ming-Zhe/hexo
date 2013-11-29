@@ -1,6 +1,6 @@
 title: High Time Function
 date: 2013-11-28 16:36:26
-description: "请带上耳机，点击现在右上角HighTime功能。哈哈。这是一个比较有意思的JavaScript功能，很方便添加到你的博客中，快进来看看源码。"
+description: "这是一个比较有意思的JavaScript功能，很方便添加到你的博客中，快进来看看源码。"
 category: 所谓开发
 tags: [JS,博客]
 ---
