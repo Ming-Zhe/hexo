@@ -72,13 +72,16 @@ tags: [VPS,nginx,linux,博客]
 ## 小结
 现在回头来看，装个Nginx还是挺简单的，主要是反代理Hexo网站的时候走了些弯路。接下来我会写一些使用VPS的心得，以及在VPS上搭建git服务。
 
-<br>
+<br/>
+
 ***
+
+<br/>
 
 爱生活，爱技术。
 愿结识各路小伙伴。
 找到我：
 
-* [微博：http://weibo.com/afmz](http://weibo.com/afmz)
-* [Github：http://github.com/Ming-Zhe](http://github.com/Ming-Zhe)
-* E-mail：law.gravitys@gmail.com
+微博：http://weibo.com/afmz
+Github：http://github.com/Ming-Zhe
+E-mail：law.gravitys@gmail.com 

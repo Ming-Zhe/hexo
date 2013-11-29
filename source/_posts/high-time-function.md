@@ -162,13 +162,16 @@ tags: [JS,博客]
 
 > P.S. 代码从[这里](http://zipperary.com/2013/11/19/give-it-a-high/)来。再推荐下moxie的博客。
 
-<br><br>
+<br/>
+
 ***
+
+<br/>
 
 爱生活，爱技术。
 愿结识各路小伙伴。
 找到我：
 
-* [微博：http://weibo.com/afmz](http://weibo.com/afmz)
-* [Github：http://github.com/Ming-Zhe](http://github.com/Ming-Zhe)
-* E-mail：law.gravitys@gmail.com
+微博：http://weibo.com/afmz
+Github：http://github.com/Ming-Zhe
+E-mail：law.gravitys@gmail.com 

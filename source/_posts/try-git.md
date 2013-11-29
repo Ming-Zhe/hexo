@@ -41,9 +41,16 @@ category: 所谓开发
 ## 总结
 耐下性子，按照步骤，一步一步来，很快就能熟练掌握git。说到底也没有多少东西。
 
-***
-欢迎共同讨论，共同进步。
+<br/>
 
-* [微博：http://weibo.com/afmz](http://weibo.com/afmz)
-* [Github：http://github.com/Ming-Zhe](http://github.com/Ming-Zhe)
-* E-mail：law.gravitys@gmail.com
+***
+
+<br/>
+
+爱生活，爱技术。
+愿结识各路小伙伴。
+找到我：
+
+微博：http://weibo.com/afmz
+Github：http://github.com/Ming-Zhe
+E-mail：law.gravitys@gmail.com 
