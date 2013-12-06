@@ -15,31 +15,31 @@ tags: [three.js,WebGL,爱技术,博客]
 
 由于我们最终的结果是要呈现在web端，所有在在前端的展示框架要先搭建好，同时还要事先下载three.js文件，或者就像我这里一样，用three.js的官方cdn。
 
-```
-<html>
-	<head>
-		<title>My first Three.js app</title>
-		<style>canvas { width: 100%; height: 100% }</style>
-	</head>
-	<body>
-		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
-		<script>
-			// Our Javascript will go here.
-		</script>
-	</body>
-</html>
-```
+
+	<html>
+		<head>
+			<title>My first Three.js app</title>
+			<style>canvas { width: 100%; height: 100% }</style>
+		</head>
+		<body>
+			<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+			<script>
+				// Our Javascript will go here.
+			</script>
+		</body>
+	</html>
+
 ### 创建场景(scene)
 
 用three.js呈现的内容需要3样元算：scene, camera, renderer	. 
 
 ```
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
 ```
 解释一下，这里的camera，我们使用的是PerspectiveCamera(three.js还提供了很多其他类型的camera以供选择)，它有4个参数，第一个表示视野大小；第二个表示成像比例，一般都是按照浏览器窗口比例来进行设定；第三和第四个分别是最远和最近的camera作用范围。下面的renderer比较容易理解，需要注意的是在最后要append到document中。
 
