@@ -11,7 +11,7 @@ tags: [three.js,WebGL,爱技术,博客]
 
 ## three.js
 
-要说玩WebGL怎么可能不说three.js，这可是对WebGL的完美封装。[源码]()和[官网]()，要学three.js这两个地方是必去之处。我简单说一下three.js起步。
+要说玩WebGL怎么可能不说three.js，这可是对WebGL的完美封装。[源码](http://threejs.org/)和[官网](https://github.com/mrdoob/three.js/)，要学three.js这两个地方是必去之处。我简单说一下three.js起步。
 
 <br/>
 
