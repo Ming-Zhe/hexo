@@ -7,6 +7,8 @@ tags: [three.js,WebGL,爱技术,博客]
 
 承接上次讲述，这次我们要实现一个功能。在程序中引入一个obj文件，在页面中以三维形式展现出来。并且，实现互动式的三维旋转，即随着鼠标的移动，图像在三维立体空间里进行相应的动作。
 
+<br/>
+
 ### 引入相关js文件
 
 	<body>
@@ -21,6 +23,8 @@ tags: [three.js,WebGL,爱技术,博客]
 
 所有的js文件在源码中都能找到，在OBJLoader.js在examples/js/loaders/中。
 
+<br/>
+
 ### OBJLoader.js
 
 这个是我们主要用的一个js模块，它实现了我们所要的引入obj文件的功能。
@@ -33,6 +37,8 @@ tags: [three.js,WebGL,爱技术,博客]
 
 代码浅显易懂，基本没什么好说的。
 
+<br/>
+
 ### 设定环境光和直接光源
 
 	var ambient = new THREE.AmbientLight( 0x101030 );
@@ -43,6 +49,8 @@ tags: [three.js,WebGL,爱技术,博客]
 	scene.add( directionalLight );
 
 three.js提供了多种环境光和光源可供选择。从官网或者github下载原文件后，里面的doc有全部的解释，其实玩javascript是一个体力活，相信你也发现了。
+
+<br/>
 
 ### 设置动画效果
 
@@ -63,6 +71,8 @@ three.js提供了多种环境光和光源可供选择。从官网或者github下
 	    }
 
 requestAnimationFrame()的主要作用是，当此时页面所在浏览器的tap或者window不可见时，就停止渲染，这样更加节省系统资源和电量。在render()中，有两个全局变量mouseX和mouseY，需要添加监听器进行监听，随时改变camera的位置，从而实现动态图像的动态显示。下面来添加监听器。
+
+<br/>
 
 ### 添加监听器
 
@@ -91,6 +101,8 @@ requestAnimationFrame()的主要作用是，当此时页面所在浏览器的tap
 	}
 
 这里还添加了另外一个监听器，是用来相应窗口变化，这也是为了适应多种显示器比例不同，以及在浏览过程中窗口大小变化，物体总是呈现在窗口的正中间。
+
+<br/>
 
 ### 最后，全部代码
 
@@ -180,6 +192,8 @@ requestAnimationFrame()的主要作用是，当此时页面所在浏览器的tap
 	    </body>
 	</html>
 
+<br/>
+
 ## 注意
 
 如果只写一个html文件并把所有的js文件引入进来，依然是无法在浏览器中显示的，这是许多浏览器为了安全性考虑，对于本地的html显示有所限制，具体原因还没有深究，有两种解决方案，一种是改变浏览器的配置，另一种是搭建一个本地服务器(推荐)，这是用python搭建的方法。
@@ -195,6 +209,8 @@ requestAnimationFrame()的主要作用是，当此时页面所在浏览器的tap
 	http-server [-p] [端口号]
 
 然后访问localhost:8080，会进入到到自己搭建的本地服务器，就可以实现obj的引入了。
+
+<br/>
 
 ### 小结
 
