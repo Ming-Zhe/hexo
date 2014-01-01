@@ -1,6 +1,6 @@
 title: 从Flickr外链图片
 date: 2013-11-29 22:32:14
-tags: [博客,Flickr,VPS]
+tags: [博客,Flickr,VPS,爱技术]
 description: "一直以来用markdown写文章，感觉上最大的问题就是外链图片实在是不方便。虽然可以放在自己服务器本地，一旦这些图片多起来，我那可怜的VPS只有20G的ssd，实在有点于心不忍。"
 category: VPS
 ---

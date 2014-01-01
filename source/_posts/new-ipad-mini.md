@@ -1,6 +1,6 @@
 title: New Ipad Mini
 date: 2013-12-01 22:49:46
-tags: [博客,mini]
+tags: [博客,mini,爱生活]
 description: "终于买下了心仪的Ipad Mini好开森"
 category: 茗哲
 ---

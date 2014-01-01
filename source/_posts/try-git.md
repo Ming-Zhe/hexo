@@ -1,6 +1,6 @@
 title: Try Git
 date: 2013-11-28 16:11:00
-tags: [博客,Git]
+tags: [博客,Git,爱技术]
 description: "I am an egotistical bastard, and I name all my projects after myself. First Linux, now git.林纳斯·托瓦兹自嘲地取了这个名字'git'。在英式英语中指一个愚笨或者不开心的人。"
 category: 所谓开发
 ---

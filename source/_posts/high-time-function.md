@@ -2,7 +2,7 @@ title: High Time Function
 date: 2013-11-28 16:36:26
 description: "这是一个比较有意思的JavaScript功能，很方便添加到你的博客中，快进来看看源码。"
 category: 所谓开发
-tags: [JS,博客]
+tags: [JS,博客,爱技术]
 ---
 
 请注意我主页右上角的HighTime功能，昨天在看小伙伴的博客的时候发现的，现在全盘供出源码。

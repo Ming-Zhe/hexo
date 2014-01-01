@@ -2,7 +2,7 @@ title: Set Up Nginx On Vps
 date: 2013-11-28 16:41:36
 description: "经过一个晚上的研究，终于在我的VPS服务器上（Centos）搭建Nginx。网上的很多博客都太老了，已经起不到指导作用了。"
 category: VPS
-tags: [VPS,nginx,linux,博客]
+tags: [VPS,nginx,linux,博客,爱生活,爱技术]
 ---
 
 先说一下，这篇文章是给那些需要在自己的VPS服务器上装Nginx的人看的。VPS版本是CentOS 6，Nginx使用是比较稳定的1.4.4版本。
