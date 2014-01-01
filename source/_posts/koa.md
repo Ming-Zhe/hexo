@@ -15,15 +15,15 @@ koa 依赖支持 generator 的 Node 环境，也就是说，node的版本要在 
 
 用npm：
 
-```
-$ npm install koa
-```
+
+	$ npm install koa
+
 
 或者，选择安装在全局：
 
-```
-$ npm install -g koa
-```
+
+	$ npm install -g koa
+
 
 <br/>
 
@@ -31,27 +31,27 @@ $ npm install -g koa
 
 这是一个koa的简单例子：
 
-```
-var koa = require('koa');
-var app = koa();
 
-// logger
+	var koa = require('koa');
+	var app = koa();
 
-app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
-});
+	// logger
 
-// response
+	app.use(function *(next){
+	  var start = new Date;
+	  yield next;
+	  var ms = new Date - start;
+	  console.log('%s %s - %s', this.method, this.url, ms);
+	});
 
-app.use(function *(){
-  this.body = 'Hello World';
-});
+	// response
 
-app.listen(3000);
-```
+	app.use(function *(){
+	  this.body = 'Hello World';
+	});
+
+	app.listen(3000);
+
 
 与普通的 function 不同，generator functions 以 function* 声明。以这种关键词声明的函数支持 `yield`。在后面会讲到 `yield` 的用法和意义。
 
@@ -61,9 +61,9 @@ app.listen(3000);
 
 执行koa时需要在 `—-harmony` 模式下运行，为了方便可以将 `node` 设置为默认启动 `harmony` 模式的别名：
 
-```
-alias node='node --harmony'
-```
+
+	alias node='node --harmony'
+
 
 这样在执行相关js的时候就可以直接使用了。
 
@@ -79,56 +79,55 @@ alias node='node --harmony'
 
 当程序运行到 `yield next` 时，代码流会暂停执行这个中间件的剩余代码，转而切换到下一个被定义的中间件执行代码，这样切换控制权的方式，被称为 downstream，当没有下一个中间件执行 downstream 的时候，代码将会逆序执行。
 
-```
-var koa = require('koa');
-var app = koa();
+	var koa = require('koa');
+	var app = koa();
 
-// x-response-time
-app.use(function *(next){
-  // (1) 进入路由
-  var start = new Date;
-  yield next;
-  // (5) 再次进入 x-response-time 中间件，记录2次通过此中间件「穿越」的时间
-  var ms = new Date - start;
-  this.set('X-Response-Time', ms + 'ms');
-  // (6) 返回 this.body
-});
+	// x-response-time
+	app.use(function *(next){
+	  // (1) 进入路由
+	  var start = new Date;
+	  yield next;
+	  // (5) 再次进入 x-response-time 中间件，记录2次通过此中间件「穿越」的时间
+	  var ms = new Date - start;
+	  this.set('X-Response-Time', ms + 'ms');
+	  // (6) 返回 this.body
+	});
 
-// logger
-app.use(function *(next){
-  // (2) 进入 logger 中间件
-  var start = new Date;
-  yield next;
-  // (4) 再次进入 logger 中间件，记录2次通过此中间件「穿越」的时间
-  var ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
-});
+	// logger
+	app.use(function *(next){
+	  // (2) 进入 logger 中间件
+	  var start = new Date;
+	  yield next;
+	  // (4) 再次进入 logger 中间件，记录2次通过此中间件「穿越」的时间
+	  var ms = new Date - start;
+	  console.log('%s %s - %s', this.method, this.url, ms);
+	});
 
-// response
-app.use(function *(){
-  // (3) 进入 response 中间件，没有捕获到下一个符合条件的中间件，传递到 upstream
-  this.body = 'Hello World';
-});
+	// response
+	app.use(function *(){
+	  // (3) 进入 response 中间件，没有捕获到下一个符合条件的中间件，传递到 upstream
+	  this.body = 'Hello World';
+	});
 
-app.listen(3000);
-```
+	app.listen(3000);
+
 
 在上方的范例代码中，中间件以此被执行的顺序已经在注释中标记出来。你也可以自己尝试运行一下这个范例，并打印记录下各个环节的输出与耗时。
 
-```
-.middleware1 {
-  // (1) do some stuff
-  .middleware2 {
-    // (2) do some other stuff
-    .middleware3 {
-      // (3) NO next yield !
-      // this.body = 'hello world'
-    }
-    // (4) do some other stuff later
-  }
-  // (5) do some stuff lastest and return
-}
-```
+
+	.middleware1 {
+	  // (1) do some stuff
+	  .middleware2 {
+	    // (2) do some other stuff
+	    .middleware3 {
+	      // (3) NO next yield !
+	      // this.body = 'hello world'
+	    }
+	    // (4) do some other stuff later
+	  }
+	  // (5) do some stuff lastest and return
+	}
+
 上方的伪代码中标注了中间件的执行顺序，看起来是不是有点像 ruby 执行代码块（block）时 yield 的表现了？也许这能帮助你更好的理解 koa 运作的方式。
 
 <br/>
