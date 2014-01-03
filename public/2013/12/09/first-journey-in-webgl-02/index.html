@@ -1,0 +1,487 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>First Journey In WebGL（二） | Ming-Zhe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="author" content="Ming-Zhe">
+  
+  <meta name="description" content="由于一门课程的需要，要做一个三维可视化的presentation，想来想去，也就WebGL我还有点感兴趣，于是开始对这一领域的研究。这两天的时间也算是小有收获吧。在报告中我就是打算带着大家一起从零写一个WebGL程序的，让所有人也都感受一下这么一个创作的过程，再分享一下学习的经验。不过可能时间不够，就在这写吧。">
+  
+  
+  <meta property="og:title" content="First Journey In WebGL（二）"/>
+  <meta property="og:site_name" content="Ming-Zhe"/>
+  <link href="/image/favicon.ico" rel="icon">
+
+  <!-- ico begin -->
+  <link rel="shortcut icon" href="/ico/ming-zhe-icon.png">
+  <link rel="icon" href="/ico/ming-zhe-icon.png">
+  <link rel="bookmark" href="/ico/ming-zhe-icon.png">
+  <!-- ico end -->
+
+  <link rel="alternate" href="http://www.ming-zhe.me/atom.xml" title="Ming-Zhe" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <meta name="anquanbao-verification" content="9e272237f19978e">
+</head>
+
+<body>
+  <header>
+    <div class="clearfix">
+	<div id="logo">
+		
+		<div>
+			<h1 class="site-name"><a href="/">Ming-Zhe</a></h1>
+			</div><br/><div style="position:relative;">
+			<h2 class="blog-motto"}>爱生活，爱技术</h2>
+		</div>
+	 </div>
+	 <div class="navbar"><a class="navbutton" href="#"><i class="icon-menu"></i></a></div>
+	<nav>
+		<ul>
+		 
+			<li><a href="/">博客</a></li>
+		
+			<li><a href="http://www.flickr.com/photos/110193633@N02/" target="_blank">Flickr</a></li>
+			<li><form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+				<label>Search</label>
+					<input type="search" name="q" id="search" autocomplete="off" autocorrect="off" autocapitalize="off" maxlength="20" placeholder="Search" />
+					<input type="hidden" name="q" value="site:ming-zhe.me">
+				</form>
+			</li>
+		</ul>
+	</nav>
+</div>
+  </header>
+  <div id="container">
+    <div id="main" class="postpart">
+	<header class="clearfix">
+	  <h1><a href="/2013/12/09/first-journey-in-webgl-02/" title="First Journey In WebGL（二）">First Journey In WebGL（二）</a></h1>
+	  <p>By
+	  
+		<a href="http://ming-zhe.me" title="Ming-Zhe">Ming-Zhe</a>
+	  
+	  on<time datetime="2013-12-09T02:56:39.000Z">Dec 9 2013</time></p>
+	</header>
+	<article>     
+	     <p>承接上次讲述，这次我们要实现一个功能。在程序中引入一个obj文件，在页面中以三维形式展现出来。并且，实现互动式的三维旋转，即随着鼠标的移动，图像在三维立体空间里进行相应的动作。</p>
+<p><br/></p>
+<h3>引入相关js文件</h3>
+<pre><code><span class="tag">&lt;<span class="title">body</span>&gt;</span>
+     <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"Three.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+     <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"OBJLoader.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+     <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"Detector.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+     <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"RequestAnimationFrame.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>//最大可能的兼容老版本浏览器
+     <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+     <span class="comment">// your code here</span>
+     </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">body</span>&gt;</span></code></pre>
+<p>所有的js文件在源码中都能找到，在OBJLoader.js在examples/js/loaders/中。</p>
+<p><br/></p>
+<h3>OBJLoader.js</h3>
+<p>这个是我们主要用的一个js模块，它实现了我们所要的引入obj文件的功能。</p>
+<pre><code>var loader = new THREE<span class="preprocessor">.OBJLoader</span>()<span class="comment">;</span>
+      loader<span class="preprocessor">.load</span>( <span class="string">"1.obj"</span>, function ( object ) {
+      object<span class="preprocessor">.position</span><span class="preprocessor">.y</span> = -<span class="number">30</span><span class="comment">;</span>
+      scene<span class="preprocessor">.add</span>( object )<span class="comment">;</span>
+      } )<span class="comment">;</span></code></pre>
+<p>代码浅显易懂，基本没什么好说的。</p>
+<p><br/></p>
+<h3>设定环境光和直接光源</h3>
+<pre><code>var ambient = new THREE<span class="preprocessor">.AmbientLight</span>( <span class="number">0x101030</span> )<span class="comment">;</span>
+scene<span class="preprocessor">.add</span>( ambient )<span class="comment">;</span>
+
+var directionalLight = new THREE<span class="preprocessor">.DirectionalLight</span>( <span class="number">0xffeedd</span> )<span class="comment">;</span>
+directionalLight<span class="preprocessor">.position</span><span class="preprocessor">.set</span>( <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> )<span class="preprocessor">.normalize</span>()<span class="comment">;</span>
+scene<span class="preprocessor">.add</span>( directionalLight )<span class="comment">;</span></code></pre>
+<p>three.js提供了多种环境光和光源可供选择。从官网或者github下载原文件后，里面的doc有全部的解释，其实玩javascript是一个体力活，相信你也发现了。</p>
+<p><br/></p>
+<h3>设置动画效果</h3>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">animate</span><span class="params">()</span> {</span>
+
+    requestAnimationFrame( animate );
+    render();
+
+    }
+
+<span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">()</span> {</span>
+
+    <span class="transposed_variable">camera.</span><span class="transposed_variable">position.</span>x += ( mouseX - <span class="transposed_variable">camera.</span><span class="transposed_variable">position.</span>x ) * <span class="number">.05</span>;
+    <span class="transposed_variable">camera.</span><span class="transposed_variable">position.</span>y += ( - mouseY - <span class="transposed_variable">camera.</span><span class="transposed_variable">position.</span>y ) * <span class="number">.05</span>;
+    <span class="transposed_variable">camera.</span>lookAt( <span class="transposed_variable">scene.</span>position );
+    <span class="transposed_variable">renderer.</span>render( scene, camera );
+
+    }</code></pre>
+<p>requestAnimationFrame()的主要作用是，当此时页面所在浏览器的tap或者window不可见时，就停止渲染，这样更加节省系统资源和电量。在render()中，有两个全局变量mouseX和mouseY，需要添加监听器进行监听，随时改变camera的位置，从而实现动态图像的动态显示。下面来添加监听器。</p>
+<p><br/></p>
+<h3>添加监听器</h3>
+<pre><code>document.addEventListener( <span class="string">'mousemove'</span>, onDocumentMouseMove, <span class="literal">false</span> );
+window.addEventListener( <span class="string">'resize'</span>, onWindowResize, <span class="literal">false</span> );</code></pre>
+<p>相应的响应函数如下：</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">onWindowResize</span><span class="params">()</span> {</span>
+
+      windowHalfX = <span class="transposed_variable">window.</span>innerWidth / <span class="number">2</span>;
+      windowHalfY = <span class="transposed_variable">window.</span>innerHeight / <span class="number">2</span>;
+
+      <span class="transposed_variable">camera.</span>aspect = <span class="transposed_variable">window.</span>innerWidth / <span class="transposed_variable">window.</span>innerHeight;
+      <span class="transposed_variable">camera.</span>updateProjectionMatrix();
+
+      <span class="transposed_variable">renderer.</span>setSize( <span class="transposed_variable">window.</span>innerWidth, <span class="transposed_variable">window.</span>innerHeight );
+
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">onDocumentMouseMove</span><span class="params">( event )</span> {</span>
+
+      mouseX = ( <span class="transposed_variable">event.</span>clientX - windowHalfX ) / <span class="number">2</span>;
+      mouseY = ( <span class="transposed_variable">event.</span>clientY - windowHalfY ) / <span class="number">2</span>;
+
+}</code></pre>
+<p>这里还添加了另外一个监听器，是用来相应窗口变化，这也是为了适应多种显示器比例不同，以及在浏览过程中窗口大小变化，物体总是呈现在窗口的正中间。</p>
+<p><br/></p>
+<h3>最后，全部代码</h3>
+<pre><code><span class="doctype">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">title</span>&gt;</span>three.js webgl - loaders - OBJ loader<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
+            <span class="tag">body</span> <span class="rules">{
+                <span class="rule"><span class="attribute">font-family</span>:<span class="value"> Monospace;</span></span>
+                <span class="rule"><span class="attribute">background-color</span>:<span class="value"> <span class="hexcolor">#000</span>;</span></span>
+                <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="hexcolor">#fff</span>;</span></span>
+                <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span>px;</span></span>
+                <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden;</span></span>
+            <span class="rule">}</span></span>
+        </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"Three.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"OBJLoader.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"Detector.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"RequestAnimationFrame.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+            <span class="keyword">var</span> container;
+            <span class="keyword">var</span> camera, scene, renderer;
+            <span class="keyword">var</span> mouseX = <span class="number">0</span>, mouseY = <span class="number">0</span>;
+            <span class="keyword">var</span> windowHalfX = window.innerWidth / <span class="number">2</span>;
+            <span class="keyword">var</span> windowHalfY = window.innerHeight / <span class="number">2</span>;
+
+            init();
+            animate();
+
+            <span class="function"><span class="keyword">function</span> <span class="title">init</span><span class="params">()</span> {</span>
+                container = document.createElement( <span class="string">'div'</span> );
+                document.body.appendChild( container );
+                scene = <span class="keyword">new</span> THREE.Scene();
+                camera = <span class="keyword">new</span> THREE.PerspectiveCamera( <span class="number">65</span>, window.innerWidth / window.innerHeight, <span class="number">1</span>, <span class="number">2000</span> );
+                camera.position.z = <span class="number">100</span>;
+                scene.add( camera );
+                <span class="keyword">var</span> ambient = <span class="keyword">new</span> THREE.AmbientLight( <span class="number">0x101030</span> );
+                scene.add( ambient );
+                <span class="keyword">var</span> directionalLight = <span class="keyword">new</span> THREE.DirectionalLight( <span class="number">0xffeedd</span> );
+                directionalLight.position.set( <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span> ).normalize();
+                scene.add( directionalLight );
+                <span class="keyword">var</span> loader = <span class="keyword">new</span> THREE.OBJLoader();
+                loader.load( <span class="string">"1.obj"</span>, <span class="function"><span class="keyword">function</span> <span class="params">( object )</span> {</span>
+                    object.position.y = -<span class="number">30</span>;
+                    scene.add( object );
+                } );
+
+                <span class="comment">// RENDERER</span>
+                renderer = <span class="keyword">new</span> THREE.WebGLRenderer();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                container.appendChild( renderer.domElement );
+
+                document.addEventListener( <span class="string">'mousemove'</span>, onDocumentMouseMove, <span class="literal">false</span> );
+                window.addEventListener( <span class="string">'resize'</span>, onWindowResize, <span class="literal">false</span> );
+            }
+
+            <span class="function"><span class="keyword">function</span> <span class="title">onWindowResize</span><span class="params">()</span> {</span>
+                windowHalfX = window.innerWidth / <span class="number">2</span>;
+                windowHalfY = window.innerHeight / <span class="number">2</span>;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            <span class="function"><span class="keyword">function</span> <span class="title">onDocumentMouseMove</span><span class="params">( event )</span> {</span>
+                mouseX = ( event.clientX - windowHalfX ) / <span class="number">2</span>;
+                mouseY = ( event.clientY - windowHalfY ) / <span class="number">2</span>;
+            }
+
+            <span class="function"><span class="keyword">function</span> <span class="title">animate</span><span class="params">()</span> {</span>
+                requestAnimationFrame( animate );
+                render();
+            }
+
+            <span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">()</span> {</span>
+                camera.position.x += ( mouseX - camera.position.x ) * <span class="number">.05</span>;
+                camera.position.y += ( - mouseY - camera.position.y ) * <span class="number">.05</span>;
+                camera.lookAt( scene.position );
+                renderer.render( scene, camera );
+            }
+        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p><br/></p>
+<h2>注意</h2>
+<p>如果只写一个html文件并把所有的js文件引入进来，依然是无法在浏览器中显示的，这是许多浏览器为了安全性考虑，对于本地的html显示有所限制，具体原因还没有深究，有两种解决方案，一种是改变浏览器的配置，另一种是搭建一个本地服务器(推荐)，这是用python搭建的方法。</p>
+<pre><code><span class="comment">$</span> <span class="comment">python</span> <span class="literal">-</span><span class="comment">m</span> <span class="comment">SimpleHTTPServer</span> <span class="comment">8080</code></pre>
+<p>用node.js：</p>
+<pre><code>(su<span class="operator"><span class="keyword">do</span>) npm install http-server -g</code></pre>
+<p>然后在任意目录下</p>
+<pre><code><span class="tag">http</span>-<span class="tag">server</span> <span class="attr_selector">[-p]</span> <span class="attr_selector">[端口号]</span></code></pre>
+<p>然后访问localhost:8080，会进入到到自己搭建的本地服务器，就可以实现obj的引入了。</p>
+<p><br/></p>
+<h3>小结</h3>
+<p>WebGL还是内容还是相当丰富的，javascript更是如此，再多的教程也都只能作为抛砖引玉，真正的老师是谷歌，还有一个强大的资料库github，善用这两个资源，再到几个社区活跃一下，学技术很简单了。。。</p>
+<p><br/></p>
+<hr>
+<p><br/></p>
+<p>爱生活，爱技术。<br>愿结识各路小伙伴。<br>找到我：</p>
+<p>微博：<a href="http://weibo.com/afmz" target="_blank">http://weibo.com/afmz</a><br>Github：<a href="http://github.com/Ming-Zhe" target="_blank">http://github.com/Ming-Zhe</a><br>E-mail：law.gravitys@gmail.com</p>
+    
+	</article>
+	
+
+
+<div class="articletags">
+	<i class="icon-tag"></i>Tags: <a href="/tags/three.js/">three.js</a><a href="/tags/WebGL/">WebGL</a><a href="/tags/爱技术/">爱技术</a><a href="/tags/博客/">博客</a>
+	<i class="icon-folder"></i>categories:  <a href="/categories/所谓开发/">所谓开发</a>
+</div>
+
+	
+<div class="jiathis_style share">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_googleplus">Google+</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1870401" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+     ralateuid:{"tsina":"afmz"},hideMore:false}
+    
+  </script> 
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=
+1870401" charset="utf-8"></script>      
+
+	<div class="pagepart clearfix">
+ 
+	<a href="/2013/12/10/这几天/" class="prev" title="这几天">这几天</a>
+ 
+ 
+	<a href="/2013/12/06/first-journey-in-webgl/" class="next" title="First Journey In WebGL（一）">First Journey In WebGL（一）</a>
+ 
+</div>
+	
+
+<!-- Duoshuo Comment BEGIN -->
+<section class="comment">
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"mingzhe"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	</section>
+<!-- Duoshuo Comment END -->
+
+</div>  
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏">
+        <i class="icon-menu"></i>
+      </a></div>
+    <div id="asidepart">
+    <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"><i class="icon-menu"></i></a></div>
+    <aside>
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/categories/所谓开发/" title="所谓开发">所谓开发<sup>5</sup></a></li>
+		
+			<li><a href="/categories/茗哲/" title="茗哲">茗哲<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Flickr/" title="Flickr">Flickr<sup>1</sup></a></li>
+		
+			<li><a href="/tags/GDG/" title="GDG">GDG<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JS/" title="JS">JS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/tags/WebGL/" title="WebGL">WebGL<sup>2</sup></a></li>
+		
+			<li><a href="/tags/koa/" title="koa">koa<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mini/" title="mini">mini<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+		
+			<li><a href="/tags/node.js/" title="node.js">node.js<sup>1</sup></a></li>
+		
+			<li><a href="/tags/three.js/" title="three.js">three.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>10</sup></a></li>
+		
+			<li><a href="/tags/爱技术/" title="爱技术">爱技术<sup>9</sup></a></li>
+		
+			<li><a href="/tags/爱生活/" title="爱生活">爱生活<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1689180852&verifier=4460fe21&dpc=1"></iframe>
+
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=3527177572&verifier=fae0c674&dpc=1"></iframe>
+
+  <div class="rsspart">
+	<a href="http://www.ming-zhe.me/atom.xml" target="_blank" title="RSS 订阅"><i class="icon-rss"></i>RSS 订阅</a>
+</div>
+</aside>
+    </div>
+  </div>
+  <footer><div id="footer" >
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	<section class="info">
+		<p>This is Ming-Zhe. Big fan of open source. For now I am a postgraduate student.<br/>
+		Enjoy my life, Enhance my strength.<br/>
+		Trying hard to program.<br/>
+		</p>
+	</section>
+	<div class="social-font">
+		
+		<a href="http://weibo.com/afmz" target="_blank" title="新浪微博"><i class="icon-sina-weibo"></i></a>
+		
+		
+		<a href="https://twitter.com/MingZheGG" target="_blank" title="twitter"><i class="icon-twitter"></i></a>
+		
+		
+		<a href="https://github.com/ming-zhe" target="_blank" title="github"><i class="icon-github"></i></a>
+		
+		
+	</div>
+	<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+	
+	<a href="http://github.com/ming-zhe" target="_blank" title="Ming-Zhe">Ming-Zhe</a>
+	
+	</p>
+</div>
+</footer>
+  <script src="/js/jquery-2.0.1.min.js"></script>
+<script src="/js/prettify.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()         
+	{	
+		$('.navbar').click(function(){
+			$('header nav').slideToggle("slow");
+		});
+		var myWidth = 0;
+    	function getSize(){
+    		if( typeof( window.innerWidth ) == 'number' ) {
+    			myWidth = window.innerWidth;
+           	 } else if( document.documentElement && document.documentElement.clientWidth) {
+             	myWidth = document.documentElement.clientWidth;
+            };
+        };
+    	getSize(); 
+    	//document.getElementById("test").innerHTML =myWidth;
+        $(window).resize(function(){
+        	getSize(); 
+        	if (myWidth >= 1024||(document.activeElement.id=='search')) {
+        		$('nav').css('display', 'block') ;
+			}else{
+				$('nav').css('display', 'none') ;
+			}
+        });
+     $("pre").addClass("prettyprint linenums");
+     prettyPrint();
+     $('.closeaside').click(function(){
+            $('#asidepart').fadeOut();
+            $('#main').animate({
+                marginLeft: ['10%','swing'],
+                marginRight: ['10%','swing']
+            });
+            $('.openaside').fadeIn();  
+        });
+        $('.openaside').click(function(){
+            $('#asidepart').fadeIn();
+            $('#main').animate({
+                marginLeft: ['0%','swing'],
+                marginRight: ['0%','swing']
+            });
+            $('.openaside').fadeOut();  
+        });
+        $(window).scroll(function(){
+            $('.openaside').css("top",Math.max(50,260-$(this).scrollTop()));
+        });
+	});
+</script>
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript">
+var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?move=0&amp;uid=1870401" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45579943-3', 'ming-zhe.me');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PMC3BR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PMC3BR');</script>
+<!-- End Google Tag Manager -->
+
+</body>
+</html> 

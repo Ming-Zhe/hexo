@@ -1,0 +1,401 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>First Journey In WebGL（一） | Ming-Zhe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="author" content="Ming-Zhe">
+  
+  <meta name="description" content="由于一门课程的需要，要做一个三维可视化的presentation，想来想去，也就WebGL我还有点感兴趣，于是开始对这一领域的研究。这两天的时间也算是小有收获吧。在报告中我就是打算带着大家一起从零写一个WebGL程序的，让所有人也都感受一下这么一个创作的过程，再分享一下学习的经验。不过可能时间不够，就在这写吧。">
+  
+  
+  <meta property="og:title" content="First Journey In WebGL（一）"/>
+  <meta property="og:site_name" content="Ming-Zhe"/>
+  <link href="/image/favicon.ico" rel="icon">
+
+  <!-- ico begin -->
+  <link rel="shortcut icon" href="/ico/ming-zhe-icon.png">
+  <link rel="icon" href="/ico/ming-zhe-icon.png">
+  <link rel="bookmark" href="/ico/ming-zhe-icon.png">
+  <!-- ico end -->
+
+  <link rel="alternate" href="http://www.ming-zhe.me/atom.xml" title="Ming-Zhe" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <meta name="anquanbao-verification" content="9e272237f19978e">
+</head>
+
+<body>
+  <header>
+    <div class="clearfix">
+	<div id="logo">
+		
+		<div>
+			<h1 class="site-name"><a href="/">Ming-Zhe</a></h1>
+			</div><br/><div style="position:relative;">
+			<h2 class="blog-motto"}>爱生活，爱技术</h2>
+		</div>
+	 </div>
+	 <div class="navbar"><a class="navbutton" href="#"><i class="icon-menu"></i></a></div>
+	<nav>
+		<ul>
+		 
+			<li><a href="/">博客</a></li>
+		
+			<li><a href="http://www.flickr.com/photos/110193633@N02/" target="_blank">Flickr</a></li>
+			<li><form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+				<label>Search</label>
+					<input type="search" name="q" id="search" autocomplete="off" autocorrect="off" autocapitalize="off" maxlength="20" placeholder="Search" />
+					<input type="hidden" name="q" value="site:ming-zhe.me">
+				</form>
+			</li>
+		</ul>
+	</nav>
+</div>
+  </header>
+  <div id="container">
+    <div id="main" class="postpart">
+	<header class="clearfix">
+	  <h1><a href="/2013/12/06/first-journey-in-webgl/" title="First Journey In WebGL（一）">First Journey In WebGL（一）</a></h1>
+	  <p>By
+	  
+		<a href="http://ming-zhe.me" title="Ming-Zhe">Ming-Zhe</a>
+	  
+	  on<time datetime="2013-12-06T13:49:53.000Z">Dec 6 2013</time></p>
+	</header>
+	<article>     
+	     <p>由于一门课程的需要，要做一个三维可视化的presentation，想来想去，也就WebGL我还有点感兴趣，于是开始对这一领域的研究。这两天的时间也算是小有收获吧。在报告中我就是打算带着大家一起从零写一个WebGL程序的，让所有人也都感受一下这么一个创作的过程，再分享一下学习的经验。不过可能时间不够，就在这写吧。</p>
+<p><br/></p>
+<h2>three.js</h2>
+<p>要说玩WebGL怎么可能不说three.js，这可是对WebGL的完美封装。<a href="http://threejs.org/" target="_blank">源码</a>和<a href="https://github.com/mrdoob/three.js/" target="_blank">官网</a>，要学three.js这两个地方是必去之处。我简单说一下three.js起步。</p>
+<p><br/></p>
+<h3>在进行开发之前</h3>
+<p>由于我们最终的结果是要呈现在web端，所有在在前端的展示框架要先搭建好，同时还要事先下载three.js文件，或者就像我这里一样，用three.js的官方cdn。</p>
+<pre><code><span class="tag">&lt;<span class="title">html</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">title</span>&gt;</span>My first Three.js app<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css"><span class="tag">canvas</span> <span class="rules">{ <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100</span>%;</span></span> <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">100</span>% }</span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://rawgithub.com/mrdoob/three.js/master/build/three.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+            <span class="comment">// Our Javascript will go here.</span>
+        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p><br/></p>
+<h3>创建场景(scene)</h3>
+<p>用three.js呈现的内容需要3样元算：scene, camera, renderer    . </p>
+<pre><code>var scene = new THREE<span class="preprocessor">.Scene</span>()<span class="comment">;</span>
+var camera = new THREE<span class="preprocessor">.PerspectiveCamera</span>( <span class="number">75</span>, window<span class="preprocessor">.innerWidth</span> / window<span class="preprocessor">.innerHeight</span>, <span class="number">0.1</span>, <span class="number">1000</span> )<span class="comment">;</span>
+
+var renderer = new THREE<span class="preprocessor">.WebGLRenderer</span>()<span class="comment">;</span>
+renderer<span class="preprocessor">.setSize</span>( window<span class="preprocessor">.innerWidth</span>, window<span class="preprocessor">.innerHeight</span> )<span class="comment">;</span>
+document<span class="preprocessor">.body</span><span class="preprocessor">.appendChild</span>( renderer<span class="preprocessor">.domElement</span> )<span class="comment">;</span></code></pre>
+<p>解释一下，这里的camera，我们使用的是PerspectiveCamera(three.js还提供了很多其他类型的camera以供选择)，它有4个参数，第一个表示视野大小；第二个表示成像比例，一般都是按照浏览器窗口比例来进行设定；第三和第四个分别是最远和最近的camera作用范围。下面的renderer比较容易理解，需要注意的是在最后要append到document中。</p>
+<p>下面创建一个物体出来。</p>
+<pre><code>var geometry = new THREE<span class="preprocessor">.CubeGeometry</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)<span class="comment">;</span>
+var material = new THREE<span class="preprocessor">.MeshBasicMaterial</span>( { color: <span class="number">0x00ff00</span> } )<span class="comment">;</span>
+var cube = new THREE<span class="preprocessor">.Mesh</span>( geometry, material )<span class="comment">;</span>
+scene<span class="preprocessor">.add</span>( cube )<span class="comment">;</span>
+
+camera<span class="preprocessor">.position</span><span class="preprocessor">.z</span> = <span class="number">5</span><span class="comment">;</span></code></pre>
+<p>这里CubeGeometry为了创建一个cube出来，由geometry变量存储。除此之外还有需要material给我们的cube着色(同样的three.js由很多material可供选择)。然后就是mesh了，这个过程可以抽象的理解为融合过程，有了geometry和material融合后就是我们需要的最终object了。最后把物体add进之前声明好的scene中去。<br><br/></p>
+<h3>渲染(render)</h3>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">render</span><span class="params">()</span> <span class="comment">{
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+}</span>
+<span class="title">render</span><span class="params">()</span>;</span></code></pre>
+<p>如果要深入解释render的原理，这就是另外一本书的内容了。。。这里，浏览器接到指令后，大概会做的事情就是每秒对要显示的内容进行60次着色。<br><br/></p>
+<h3>制作动画效果</h3>
+<p>如果渲染出的图像不会动，可能也看不出三维效果来。因为我们用的只是一个生成的简单cube，本身是没有办法呈现出立体感的。所以我们加点动态以展示出，我们做的确实一个三维的object。</p>
+<pre><code>cube<span class="preprocessor">.rotation</span><span class="preprocessor">.x</span> += <span class="number">0.1</span><span class="comment">;</span>
+cube<span class="preprocessor">.rotation</span><span class="preprocessor">.y</span> += <span class="number">0.1</span><span class="comment">;</span></code></pre>
+<p><br/></p>
+<h3>最终代码展示</h3>
+<pre><code><span class="tag">&lt;<span class="title">html</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">head</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">title</span>&gt;</span>My first Three.js app<span class="tag">&lt;/<span class="title">title</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css"><span class="tag">canvas</span> <span class="rules">{ <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100</span>%;</span></span> <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">100</span>% }</span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">body</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"three.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+            <span class="keyword">var</span> scene = <span class="keyword">new</span> THREE.Scene();
+            <span class="keyword">var</span> camera = <span class="keyword">new</span> THREE.PerspectiveCamera(<span class="number">75</span>, window.innerWidth/window.innerHeight, <span class="number">0.1</span>, <span class="number">1000</span>);
+
+            <span class="keyword">var</span> renderer = <span class="keyword">new</span> THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            <span class="keyword">var</span> geometry = <span class="keyword">new</span> THREE.CubeGeometry(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>);
+            <span class="keyword">var</span> material = <span class="keyword">new</span> THREE.MeshBasicMaterial({color: <span class="number">0x00ff00</span>});
+            <span class="keyword">var</span> cube = <span class="keyword">new</span> THREE.Mesh(geometry, material);
+            scene.add(cube);
+
+            camera.position.z = <span class="number">5</span>;
+
+            <span class="keyword">var</span> render = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+                requestAnimationFrame(render);
+
+                cube.rotation.x += <span class="number">0.1</span>;
+                cube.rotation.y += <span class="number">0.1</span>;
+
+                renderer.render(scene, camera);
+            };
+
+            render();
+        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">html</span>&gt;</span></code></pre>
+<p><br/><br>这次先写这么多，下次介绍怎么再一个WebGL程序中load一个外部obj模型。哈哈，给力的实例来了。。。</p>
+<p><br/></p>
+<hr>
+<p><br/></p>
+<p>爱生活，爱技术。<br>愿结识各路小伙伴。<br>找到我：</p>
+<p>微博：<a href="http://weibo.com/afmz" target="_blank">http://weibo.com/afmz</a><br>Github：<a href="http://github.com/Ming-Zhe" target="_blank">http://github.com/Ming-Zhe</a><br>E-mail：law.gravitys@gmail.com</p>
+    
+	</article>
+	
+
+
+<div class="articletags">
+	<i class="icon-tag"></i>Tags: <a href="/tags/three.js/">three.js</a><a href="/tags/WebGL/">WebGL</a><a href="/tags/爱技术/">爱技术</a><a href="/tags/博客/">博客</a>
+	<i class="icon-folder"></i>categories:  <a href="/categories/所谓开发/">所谓开发</a>
+</div>
+
+	
+<div class="jiathis_style share">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_googleplus">Google+</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1870401" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+     ralateuid:{"tsina":"afmz"},hideMore:false}
+    
+  </script> 
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=
+1870401" charset="utf-8"></script>      
+
+	<div class="pagepart clearfix">
+ 
+	<a href="/2013/12/09/first-journey-in-webgl-02/" class="prev" title="First Journey In WebGL（二）">First Journey In WebGL（二）</a>
+ 
+ 
+	<a href="/2013/12/03/再次造访gdg/" class="next" title="再次造访GDG">再次造访GDG</a>
+ 
+</div>
+	
+
+<!-- Duoshuo Comment BEGIN -->
+<section class="comment">
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"mingzhe"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	</section>
+<!-- Duoshuo Comment END -->
+
+</div>  
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏">
+        <i class="icon-menu"></i>
+      </a></div>
+    <div id="asidepart">
+    <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"><i class="icon-menu"></i></a></div>
+    <aside>
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/categories/所谓开发/" title="所谓开发">所谓开发<sup>5</sup></a></li>
+		
+			<li><a href="/categories/茗哲/" title="茗哲">茗哲<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Flickr/" title="Flickr">Flickr<sup>1</sup></a></li>
+		
+			<li><a href="/tags/GDG/" title="GDG">GDG<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JS/" title="JS">JS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/tags/WebGL/" title="WebGL">WebGL<sup>2</sup></a></li>
+		
+			<li><a href="/tags/koa/" title="koa">koa<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mini/" title="mini">mini<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+		
+			<li><a href="/tags/node.js/" title="node.js">node.js<sup>1</sup></a></li>
+		
+			<li><a href="/tags/three.js/" title="three.js">three.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>10</sup></a></li>
+		
+			<li><a href="/tags/爱技术/" title="爱技术">爱技术<sup>9</sup></a></li>
+		
+			<li><a href="/tags/爱生活/" title="爱生活">爱生活<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1689180852&verifier=4460fe21&dpc=1"></iframe>
+
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=3527177572&verifier=fae0c674&dpc=1"></iframe>
+
+  <div class="rsspart">
+	<a href="http://www.ming-zhe.me/atom.xml" target="_blank" title="RSS 订阅"><i class="icon-rss"></i>RSS 订阅</a>
+</div>
+</aside>
+    </div>
+  </div>
+  <footer><div id="footer" >
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	<section class="info">
+		<p>This is Ming-Zhe. Big fan of open source. For now I am a postgraduate student.<br/>
+		Enjoy my life, Enhance my strength.<br/>
+		Trying hard to program.<br/>
+		</p>
+	</section>
+	<div class="social-font">
+		
+		<a href="http://weibo.com/afmz" target="_blank" title="新浪微博"><i class="icon-sina-weibo"></i></a>
+		
+		
+		<a href="https://twitter.com/MingZheGG" target="_blank" title="twitter"><i class="icon-twitter"></i></a>
+		
+		
+		<a href="https://github.com/ming-zhe" target="_blank" title="github"><i class="icon-github"></i></a>
+		
+		
+	</div>
+	<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+	
+	<a href="http://github.com/ming-zhe" target="_blank" title="Ming-Zhe">Ming-Zhe</a>
+	
+	</p>
+</div>
+</footer>
+  <script src="/js/jquery-2.0.1.min.js"></script>
+<script src="/js/prettify.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()         
+	{	
+		$('.navbar').click(function(){
+			$('header nav').slideToggle("slow");
+		});
+		var myWidth = 0;
+    	function getSize(){
+    		if( typeof( window.innerWidth ) == 'number' ) {
+    			myWidth = window.innerWidth;
+           	 } else if( document.documentElement && document.documentElement.clientWidth) {
+             	myWidth = document.documentElement.clientWidth;
+            };
+        };
+    	getSize(); 
+    	//document.getElementById("test").innerHTML =myWidth;
+        $(window).resize(function(){
+        	getSize(); 
+        	if (myWidth >= 1024||(document.activeElement.id=='search')) {
+        		$('nav').css('display', 'block') ;
+			}else{
+				$('nav').css('display', 'none') ;
+			}
+        });
+     $("pre").addClass("prettyprint linenums");
+     prettyPrint();
+     $('.closeaside').click(function(){
+            $('#asidepart').fadeOut();
+            $('#main').animate({
+                marginLeft: ['10%','swing'],
+                marginRight: ['10%','swing']
+            });
+            $('.openaside').fadeIn();  
+        });
+        $('.openaside').click(function(){
+            $('#asidepart').fadeIn();
+            $('#main').animate({
+                marginLeft: ['0%','swing'],
+                marginRight: ['0%','swing']
+            });
+            $('.openaside').fadeOut();  
+        });
+        $(window).scroll(function(){
+            $('.openaside').css("top",Math.max(50,260-$(this).scrollTop()));
+        });
+	});
+</script>
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript">
+var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?move=0&amp;uid=1870401" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45579943-3', 'ming-zhe.me');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PMC3BR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PMC3BR');</script>
+<!-- End Google Tag Manager -->
+
+</body>
+</html> 

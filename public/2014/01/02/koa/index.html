@@ -1,0 +1,424 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>基于Node的下一代Web开发框架--koa | Ming-Zhe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="author" content="Ming-Zhe">
+  
+  <meta name="description" content="由 Express 原班人马打造的 koa，致力于成为一个更小、更健壮、更富有表现力的 Web 框架。使用 koa 编写 web 应用，通过组合不同的 generator，可以免除重复繁琐的回调函数嵌套，并极大地提升常用错误处理效率。Koa 不在内核方法中绑定任何中间件，它仅仅提供了一个轻量优雅的函数库，使得编写 Web 应用变得得心应手。">
+  
+  
+  <meta property="og:title" content="基于Node的下一代Web开发框架--koa"/>
+  <meta property="og:site_name" content="Ming-Zhe"/>
+  <link href="/image/favicon.ico" rel="icon">
+
+  <!-- ico begin -->
+  <link rel="shortcut icon" href="/ico/ming-zhe-icon.png">
+  <link rel="icon" href="/ico/ming-zhe-icon.png">
+  <link rel="bookmark" href="/ico/ming-zhe-icon.png">
+  <!-- ico end -->
+
+  <link rel="alternate" href="http://www.ming-zhe.me/atom.xml" title="Ming-Zhe" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <meta name="anquanbao-verification" content="9e272237f19978e">
+</head>
+
+<body>
+  <header>
+    <div class="clearfix">
+	<div id="logo">
+		
+		<div>
+			<h1 class="site-name"><a href="/">Ming-Zhe</a></h1>
+			</div><br/><div style="position:relative;">
+			<h2 class="blog-motto"}>爱生活，爱技术</h2>
+		</div>
+	 </div>
+	 <div class="navbar"><a class="navbutton" href="#"><i class="icon-menu"></i></a></div>
+	<nav>
+		<ul>
+		 
+			<li><a href="/">博客</a></li>
+		
+			<li><a href="http://www.flickr.com/photos/110193633@N02/" target="_blank">Flickr</a></li>
+			<li><form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+				<label>Search</label>
+					<input type="search" name="q" id="search" autocomplete="off" autocorrect="off" autocapitalize="off" maxlength="20" placeholder="Search" />
+					<input type="hidden" name="q" value="site:ming-zhe.me">
+				</form>
+			</li>
+		</ul>
+	</nav>
+</div>
+  </header>
+  <div id="container">
+    <div id="main" class="postpart">
+	<header class="clearfix">
+	  <h1><a href="/2014/01/02/koa/" title="基于Node的下一代Web开发框架--koa">基于Node的下一代Web开发框架--koa</a></h1>
+	  <p>By
+	  
+		<a href="http://ming-zhe.me" title="Ming-Zhe">Ming-Zhe</a>
+	  
+	  on<time datetime="2014-01-01T16:26:53.000Z">Jan 2 2014</time></p>
+	</header>
+	<article>     
+	     <p>由 Express 原班人马打造的 koa，致力于成为一个更小、更健壮、更富有表现力的 Web 框架。使用 koa 编写 web 应用，通过组合不同的 generator，可以免除重复繁琐的回调函数嵌套，并极大地提升常用错误处理效率。Koa 不在内核方法中绑定任何中间件，它仅仅提供了一个轻量优雅的函数库，使得编写 Web 应用变得得心应手。</p>
+<p><br/></p>
+<h2>安装koa</h2>
+<p>koa 依赖支持 generator 的 Node 环境，也就是说，node的版本要在 <code>0.11.9</code> 或者更高，否则将无法执行。</p>
+<p>用npm：</p>
+<pre><code><span class="variable">$ </span>npm install koa</code></pre>
+<p>或者，选择安装在全局：</p>
+<pre><code><span class="comment">$</span> <span class="comment">npm</span> <span class="comment">install</span> <span class="literal">-</span><span class="comment">g</span> <span class="comment">koa</code></pre>
+<p><br/></p>
+<h2>Example</h2>
+<p>这是一个koa的简单例子：</p>
+<pre><code><span class="keyword">var</span> koa = <span class="keyword">require</span>(<span class="string">'koa'</span>);
+<span class="keyword">var</span> app = koa();
+
+<span class="comment">// logger</span>
+
+app.<span class="keyword">use</span>(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span>{</span>
+  <span class="keyword">var</span> start = <span class="keyword">new</span> Date;
+  yield next;
+  <span class="keyword">var</span> ms = <span class="keyword">new</span> Date - start;
+  console.log(<span class="string">'%s %s - %s'</span>, <span class="keyword">this</span>.method, <span class="keyword">this</span>.url, ms);
+});
+
+<span class="comment">// response</span>
+
+app.<span class="keyword">use</span>(<span class="function"><span class="keyword">function</span> *<span class="params">()</span>{</span>
+  <span class="keyword">this</span>.body = <span class="string">'Hello World'</span>;
+});
+
+app.listen(<span class="number">3000</span>);</code></pre>
+<p>与普通的 function 不同，generator functions 以 function* 声明。以这种关键词声明的函数支持 <code>yield</code>。在后面会讲到 <code>yield</code> 的用法和意义。</p>
+<p><br/></p>
+<h2>执行koa</h2>
+<p>执行koa时需要在 <code>—-harmony</code> 模式下运行，为了方便可以将 <code>node</code> 设置为默认启动 <code>harmony</code> 模式的别名：</p>
+<pre><code><span class="keyword">alias</span> node=<span class="attribute">'node</span> <span class="comment">--harmony'</span></code></pre>
+<p>这样在执行相关js的时候就可以直接使用了。</p>
+<p><br/></p>
+<h2>Cascading</h2>
+<p>这是一个比较抽象的概念。Koa 中间件以一种非常传统的方式级联起来，也就是这里所谓的Cascading。</p>
+<p>在以往的 Node 开发中，频繁使用回调不太便于展示复杂的代码逻辑，在 Koa 中，我们可以写出真正具有表现力的中间件。与 Connect 实现中间件的方法相对比，Koa 的做法不是简单的将控制权依次移交给一个又一个的中间件直到程序结束，Koa 执行代码的方式有点像回形针，用户请求通过中间件，遇到 <code>yield next</code> 关键字时，会被传递到下一个符合请求的路由（downstream），在 <code>yield next</code> 捕获不到下一个中间件时，逆序返回继续执行代码（upstream）。</p>
+<p>下边这个例子展现了使用这一特殊方法书写的 Hello World 范例：一开始，用户的请求通过 x-response-time 中间件和 logging 中间件，这两个中间件记录了一些请求细节，然后「穿过」 response 中间件一次，最终结束请求，返回 「Hello World」。</p>
+<p>当程序运行到 <code>yield next</code> 时，代码流会暂停执行这个中间件的剩余代码，转而切换到下一个被定义的中间件执行代码，这样切换控制权的方式，被称为 downstream，当没有下一个中间件执行 downstream 的时候，代码将会逆序执行。</p>
+<pre><code><span class="keyword">var</span> koa = <span class="keyword">require</span>(<span class="string">'koa'</span>);
+<span class="keyword">var</span> app = koa();
+
+<span class="comment">// x-response-time</span>
+app.<span class="keyword">use</span>(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span>{</span>
+  <span class="comment">// (1) 进入路由</span>
+  <span class="keyword">var</span> start = <span class="keyword">new</span> Date;
+  yield next;
+  <span class="comment">// (5) 再次进入 x-response-time 中间件，记录2次通过此中间件「穿越」的时间</span>
+  <span class="keyword">var</span> ms = <span class="keyword">new</span> Date - start;
+  <span class="keyword">this</span>.set(<span class="string">'X-Response-Time'</span>, ms + <span class="string">'ms'</span>);
+  <span class="comment">// (6) 返回 this.body</span>
+});
+
+<span class="comment">// logger</span>
+app.<span class="keyword">use</span>(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span>{</span>
+  <span class="comment">// (2) 进入 logger 中间件</span>
+  <span class="keyword">var</span> start = <span class="keyword">new</span> Date;
+  yield next;
+  <span class="comment">// (4) 再次进入 logger 中间件，记录2次通过此中间件「穿越」的时间</span>
+  <span class="keyword">var</span> ms = <span class="keyword">new</span> Date - start;
+  console.log(<span class="string">'%s %s - %s'</span>, <span class="keyword">this</span>.method, <span class="keyword">this</span>.url, ms);
+});
+
+<span class="comment">// response</span>
+app.<span class="keyword">use</span>(<span class="function"><span class="keyword">function</span> *<span class="params">()</span>{</span>
+  <span class="comment">// (3) 进入 response 中间件，没有捕获到下一个符合条件的中间件，传递到 upstream</span>
+  <span class="keyword">this</span>.body = <span class="string">'Hello World'</span>;
+});
+
+app.listen(<span class="number">3000</span>);</code></pre>
+<p>在上方的范例代码中，中间件以此被执行的顺序已经在注释中标记出来。你也可以自己尝试运行一下这个范例，并打印记录下各个环节的输出与耗时。</p>
+<pre><code>.middleware1 {
+  <span class="regexp">//</span> (<span class="number">1</span>) <span class="keyword">do</span> some stuff
+  .middleware2 {
+    <span class="regexp">//</span> (<span class="number">2</span>) <span class="keyword">do</span> some other stuff
+    .middleware3 {
+      <span class="regexp">//</span> (<span class="number">3</span>) NO next yield !
+      <span class="regexp">//</span> <span class="keyword">this</span>.body = <span class="string">'hello world'</span>
+    }
+    <span class="regexp">//</span> (<span class="number">4</span>) <span class="keyword">do</span> some other stuff later
+  }
+  <span class="regexp">//</span> (<span class="number">5</span>) <span class="keyword">do</span> some stuff lastest <span class="keyword">and</span> <span class="keyword">return</span>
+}</code></pre>
+<p>上方的伪代码中标注了中间件的执行顺序，看起来是不是有点像 ruby 执行代码块（block）时 yield 的表现了？也许这能帮助你更好的理解 koa 运作的方式。</p>
+<p><br/></p>
+<h2>中间件（Middleware）</h2>
+<p>实际上，这些只是初步理解了koa基础，koa有很多第三方开发的中间件，这些中间件的熟练运用才是关键，github有很多这方面的库，每个都有详细的例子解释。以下是常用的一些：</p>
+<ul>
+<li><a href="https://github.com/alexmingoia/koa-router" target="_blank">koa-router</a></li>
+<li><a href="https://github.com/koajs/trie-router" target="_blank">trie-router</a></li>
+<li><a href="https://github.com/koajs/route" target="_blank">route</a></li>
+<li><a href="https://github.com/koajs/basic-auth" target="_blank">basic-auth</a></li>
+<li><a href="https://github.com/koajs/etag" target="_blank">etag</a></li>
+<li><a href="https://github.com/koajs/compose" target="_blank">compose</a></li>
+<li><a href="https://github.com/koajs/static" target="_blank">static</a></li>
+<li><a href="https://github.com/koajs/static-cache" target="_blank">static-cache</a></li>
+<li><a href="https://github.com/koajs/session" target="_blank">session</a></li>
+<li><a href="https://github.com/koajs/compress" target="_blank">compress</a></li>
+<li><a href="https://github.com/koajs/csrf" target="_blank">csrf</a></li>
+<li><a href="https://github.com/koajs/logger" target="_blank">logger</a></li>
+<li><a href="https://github.com/koajs/mount" target="_blank">mount</a></li>
+<li><a href="https://github.com/koajs/send" target="_blank">send</a></li>
+<li><a href="https://github.com/koajs/error" target="_blank">error</a></li>
+</ul>
+<p><br/></p>
+<h2>小结</h2>
+<p>这些天确实做了写有关koa的工作，集合开源的力量做了一个 <a href="http://koajs.cn/" target="_blank"><code>中文文档</code></a> 有更详细的API说明。</p>
+<p>在这里要感谢 <a href="http://yimity.com/" target="_blank"><code>一米</code></a> 对网站建设的大力贡献，还要感谢 <a href="https://github.com/turingou" target="_blank"><code>郭宇</code></a> 对翻译工作的大力贡献，此中文文档遵循MIT协议，转载著名出处即可。</p>
+<p><br/></p>
+<hr>
+<p><br/></p>
+<p>爱生活，爱技术。<br>愿结识各路小伙伴。<br>找到我：</p>
+<p>微博：<a href="http://weibo.com/afmz" target="_blank">http://weibo.com/afmz</a><br>Github：<a href="http://github.com/Ming-Zhe" target="_blank">http://github.com/Ming-Zhe</a><br>E-mail：law.gravitys@gmail.com</p>
+    
+	</article>
+	
+
+
+<div class="articletags">
+	<i class="icon-tag"></i>Tags: <a href="/tags/koa/">koa</a><a href="/tags/爱技术/">爱技术</a><a href="/tags/博客/">博客</a><a href="/tags/node.js/">node.js</a>
+	<i class="icon-folder"></i>categories:  <a href="/categories/所谓开发/">所谓开发</a>
+</div>
+
+	
+<div class="jiathis_style share">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_googleplus">Google+</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1870401" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+     ralateuid:{"tsina":"afmz"},hideMore:false}
+    
+  </script> 
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=
+1870401" charset="utf-8"></script>      
+
+	<div class="pagepart clearfix">
+ 
+ 
+	<a href="/2013/12/10/这几天/" class="next" title="这几天">这几天</a>
+ 
+</div>
+	
+
+<!-- Duoshuo Comment BEGIN -->
+<section class="comment">
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"mingzhe"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	</section>
+<!-- Duoshuo Comment END -->
+
+</div>  
+    <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏">
+        <i class="icon-menu"></i>
+      </a></div>
+    <div id="asidepart">
+    <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"><i class="icon-menu"></i></a></div>
+    <aside>
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/categories/所谓开发/" title="所谓开发">所谓开发<sup>5</sup></a></li>
+		
+			<li><a href="/categories/茗哲/" title="茗哲">茗哲<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Android/" title="Android">Android<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Flickr/" title="Flickr">Flickr<sup>1</sup></a></li>
+		
+			<li><a href="/tags/GDG/" title="GDG">GDG<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Git/" title="Git">Git<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JS/" title="JS">JS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/VPS/" title="VPS">VPS<sup>2</sup></a></li>
+		
+			<li><a href="/tags/WebGL/" title="WebGL">WebGL<sup>2</sup></a></li>
+		
+			<li><a href="/tags/koa/" title="koa">koa<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mini/" title="mini">mini<sup>1</sup></a></li>
+		
+			<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+		
+			<li><a href="/tags/node.js/" title="node.js">node.js<sup>1</sup></a></li>
+		
+			<li><a href="/tags/three.js/" title="three.js">three.js<sup>2</sup></a></li>
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>10</sup></a></li>
+		
+			<li><a href="/tags/爱技术/" title="爱技术">爱技术<sup>9</sup></a></li>
+		
+			<li><a href="/tags/爱生活/" title="爱生活">爱生活<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=1689180852&verifier=4460fe21&dpc=1"></iframe>
+
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=3527177572&verifier=fae0c674&dpc=1"></iframe>
+
+  <div class="rsspart">
+	<a href="http://www.ming-zhe.me/atom.xml" target="_blank" title="RSS 订阅"><i class="icon-rss"></i>RSS 订阅</a>
+</div>
+</aside>
+    </div>
+  </div>
+  <footer><div id="footer" >
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	<section class="info">
+		<p>This is Ming-Zhe. Big fan of open source. For now I am a postgraduate student.<br/>
+		Enjoy my life, Enhance my strength.<br/>
+		Trying hard to program.<br/>
+		</p>
+	</section>
+	<div class="social-font">
+		
+		<a href="http://weibo.com/afmz" target="_blank" title="新浪微博"><i class="icon-sina-weibo"></i></a>
+		
+		
+		<a href="https://twitter.com/MingZheGG" target="_blank" title="twitter"><i class="icon-twitter"></i></a>
+		
+		
+		<a href="https://github.com/ming-zhe" target="_blank" title="github"><i class="icon-github"></i></a>
+		
+		
+	</div>
+	<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+	
+	<a href="http://github.com/ming-zhe" target="_blank" title="Ming-Zhe">Ming-Zhe</a>
+	
+	</p>
+</div>
+</footer>
+  <script src="/js/jquery-2.0.1.min.js"></script>
+<script src="/js/prettify.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function()         
+	{	
+		$('.navbar').click(function(){
+			$('header nav').slideToggle("slow");
+		});
+		var myWidth = 0;
+    	function getSize(){
+    		if( typeof( window.innerWidth ) == 'number' ) {
+    			myWidth = window.innerWidth;
+           	 } else if( document.documentElement && document.documentElement.clientWidth) {
+             	myWidth = document.documentElement.clientWidth;
+            };
+        };
+    	getSize(); 
+    	//document.getElementById("test").innerHTML =myWidth;
+        $(window).resize(function(){
+        	getSize(); 
+        	if (myWidth >= 1024||(document.activeElement.id=='search')) {
+        		$('nav').css('display', 'block') ;
+			}else{
+				$('nav').css('display', 'none') ;
+			}
+        });
+     $("pre").addClass("prettyprint linenums");
+     prettyPrint();
+     $('.closeaside').click(function(){
+            $('#asidepart').fadeOut();
+            $('#main').animate({
+                marginLeft: ['10%','swing'],
+                marginRight: ['10%','swing']
+            });
+            $('.openaside').fadeIn();  
+        });
+        $('.openaside').click(function(){
+            $('#asidepart').fadeIn();
+            $('#main').animate({
+                marginLeft: ['0%','swing'],
+                marginRight: ['0%','swing']
+            });
+            $('.openaside').fadeOut();  
+        });
+        $(window).scroll(function(){
+            $('.openaside').css("top",Math.max(50,260-$(this).scrollTop()));
+        });
+	});
+</script>
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript">
+var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?move=0&amp;uid=1870401" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45579943-3', 'ming-zhe.me');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PMC3BR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PMC3BR');</script>
+<!-- End Google Tag Manager -->
+
+</body>
+</html> 

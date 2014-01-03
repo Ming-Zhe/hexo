@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   
-  <title>Archives: 2013 | Ming-Zhe</title>
+  <title>Set Up Nginx On Vps | Ming-Zhe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   <meta name="author" content="Ming-Zhe">
   
-  <meta name="description" content="blog">
+  <meta name="description" content="经过一个晚上的研究，终于在我的VPS服务器上（Centos）搭建Nginx。网上的很多博客都太老了，已经起不到指导作用了。">
   
   
-  
+  <meta property="og:title" content="Set Up Nginx On Vps"/>
   <meta property="og:site_name" content="Ming-Zhe"/>
   <link href="/image/favicon.ico" rel="icon">
 
@@ -56,83 +56,132 @@
 </div>
   </header>
   <div id="container">
+    <div id="main" class="postpart">
+	<header class="clearfix">
+	  <h1><a href="/2013/11/28/set-up-nginx-on-vps/" title="Set Up Nginx On Vps">Set Up Nginx On Vps</a></h1>
+	  <p>By
+	  
+		<a href="http://ming-zhe.me" title="Ming-Zhe">Ming-Zhe</a>
+	  
+	  on<time datetime="2013-11-28T08:41:36.000Z">Nov 28 2013</time></p>
+	</header>
+	<article>     
+	     <p>先说一下，这篇文章是给那些需要在自己的VPS服务器上装Nginx的人看的。VPS版本是CentOS 6，Nginx使用是比较稳定的1.4.4版本。</p>
+<h2>Why Nginx</h2>
+<p>事实上，我是受怂恿的。。。因为本身，我的博客不论是Jekyll还是Hexo都是不需要这种代理服务器的。但是作为一个出色轻量级web服务器，Nginx是在是太优秀了：</p>
+<ul>
+<li>超轻量级，占用更少的资源，对于我们这种自己掏腰包买VPS的小R玩家，每一分资源都颇显珍贵，选择Nginx而非Apache还是很有必要的。</li>
+<li>并发处理，Nginx处理请求是异步非阻塞的，（这点和node.js有点不谋而合的意思。。。）</li>
+<li>社区活跃，这点相信就不用我多说了，每个程序员恐怕最看重这点了。</li>
+</ul>
+<p>考虑到这些，加上为了长远考虑，说不定以后要在服务器上放点App的服务什么的，我还是装了吧。</p>
+<h2>强势吐槽</h2>
+<p>不知道是我搜索的方法不对还是怎么，搜到的资料实在有失水准，如果现在看到这篇文章的你和我遇到的情况是一样的，按照我的解决方案应该是没问题了。在此我先写表上日期，现在是2013年11月26日，自己判断本博客是否已经过时。有什么反馈或者问题可以通过下面的联系方式找到我。</p>
+<h2>言归正传</h2>
+<p>本人的VPS是CentOS系统，Ubuntu或者其他用户仅供参考，自己斟酌。</p>
+<h4>第一步，请确定，你的系统已经安装GCC等基础yum包</h4>
+<h4>第二步，建立软件源配置文件</h4>
+<p>在<code>/etc/yum.repos.d/</code>目录下建立一个<code>nginx.repo</code>软件源配置文件。命令如下： </p>
+<pre><code><span class="preprocessor"># cd /etc/yum.repos.d/ </span>
+<span class="preprocessor"># vim</span></code></pre>
+<p>然后填写如下文件内容：</p>
+<pre><code><span class="title">[nginx]</span> 
+<span class="setting">name=<span class="value">nginx repo </span></span>
+<span class="setting">baseurl=<span class="value">http://nginx.org/packages/centos/$releasever/$basearch/ </span></span>
+<span class="setting">gpgcheck=<span class="value"><span class="number">0</span> </span></span>
+<span class="setting">enabled=<span class="value"><span class="number">1</span></span></span></code></pre>
+<p>执行vim命令保存文件为<code>nginx.repo</code>完整路径是<code>/etc/yum.repos.d/nginx.repo</code></p>
+<pre><code><span class="symbol">:w</span> nginx.repo</code></pre>
+<h4>第三步，运行YUM</h4>
+<p>执行yum命令安装nginx</p>
+<pre><code><span class="title">yum</span> install nginx </code></pre>
+<p>在过程中会让你输入一个Y，回车即可。</p>
+<h4>第四步，设置反向代理</h4>
+<p>这是网上一些网站写的有错的一步，在<code>/etc/nginx/conf.d/</code>找到<code>default.conf</code>，修改<code>listen、server_name、proxy_pass</code>内容：</p>
+<pre><code><span class="title">server</span> {
+<span class="title">listen</span>       <span class="number">80</span>;
+<span class="title">server_name</span>  example.com;
+<span class="title">location</span> / {
+    <span class="comment">#    root   /usr/share/nginx/html;</span>
+    <span class="comment">#    index  index.html index.htm;</span>
+<span class="title">proxy_pass</span>   <span class="url">http://127.0.0.1:4000/;</span> <span class="comment">##这里我用Hexo搭建的博客</span>
+}
+}</code></pre>
+<h4>第五步，启动Nginx</h4>
+<p>且看一下指令：</p>
+<pre><code><span class="preprocessor"># service nginx start</span>
+<span class="preprocessor"># service nginx stop</span>
+<span class="preprocessor"># service nginx restart</span>
+<span class="preprocessor"># service nginx status</span>
+<span class="preprocessor"># service nginx reload</span></code></pre>
+<h2>小结</h2>
+<p>现在回头来看，装个Nginx还是挺简单的，主要是反代理Hexo网站的时候走了些弯路。接下来我会写一些使用VPS的心得，以及在VPS上搭建git服务。</p>
+<p><br/></p>
+<hr>
+<p><br/></p>
+<p>爱生活，爱技术。<br>愿结识各路小伙伴。<br>找到我：</p>
+<p>微博：<a href="http://weibo.com/afmz" target="_blank">http://weibo.com/afmz</a><br>Github：<a href="http://github.com/Ming-Zhe" target="_blank">http://github.com/Ming-Zhe</a><br>E-mail：law.gravitys@gmail.com</p>
     
+	</article>
+	
 
-<div id="main" class="postpart archivepart">
-  <h2>2013</h2>
-   
-      <section class="post">
-        <a href="/2013/12/10/这几天/" title="这几天">
-        <h1>这几天</h1>
-        <time datetime="2013-12-10T12:40:14.000Z">Dec 10 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/12/09/first-journey-in-webgl-02/" title="First Journey In WebGL（二）">
-        <h1>First Journey In WebGL（二）</h1>
-        <time datetime="2013-12-09T02:56:39.000Z">Dec 9 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/12/06/first-journey-in-webgl/" title="First Journey In WebGL（一）">
-        <h1>First Journey In WebGL（一）</h1>
-        <time datetime="2013-12-06T13:49:53.000Z">Dec 6 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/12/03/再次造访gdg/" title="再次造访GDG">
-        <h1>再次造访GDG</h1>
-        <time datetime="2013-12-03T10:42:40.000Z">Dec 3 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/12/01/new-ipad-mini/" title="New Ipad Mini">
-        <h1>New Ipad Mini</h1>
-        <time datetime="2013-12-01T14:49:46.000Z">Dec 1 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/11/29/use-pic-form-your-flickr/" title="从Flickr外链图片">
-        <h1>从Flickr外链图片</h1>
-        <time datetime="2013-11-29T14:32:14.000Z">Nov 29 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/11/28/set-up-nginx-on-vps/" title="Set Up Nginx On Vps">
-        <h1>Set Up Nginx On Vps</h1>
-        <time datetime="2013-11-28T08:41:36.000Z">Nov 28 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/11/28/high-time-function/" title="High Time Function">
-        <h1>High Time Function</h1>
-        <time datetime="2013-11-28T08:36:26.000Z">Nov 28 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/11/28/try-git/" title="Try Git">
-        <h1>Try Git</h1>
-        <time datetime="2013-11-28T08:11:00.000Z">Nov 28 2013</time>
-        </a>
-      </section>
-  
-      <section class="post">
-        <a href="/2013/11/27/hello-world/" title="Hello World">
-        <h1>Hello World</h1>
-        <time datetime="2013-11-27T13:54:40.000Z">Nov 27 2013</time>
-        </a>
-      </section>
-  
+
+<div class="articletags">
+	<i class="icon-tag"></i>Tags: <a href="/tags/VPS/">VPS</a><a href="/tags/nginx/">nginx</a><a href="/tags/linux/">linux</a><a href="/tags/博客/">博客</a><a href="/tags/爱生活/">爱生活</a><a href="/tags/爱技术/">爱技术</a>
+	<i class="icon-folder"></i>categories:  <a href="/categories/VPS/">VPS</a>
 </div>
 
+	
+<div class="jiathis_style share">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_tqq">腾讯微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_googleplus">Google+</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1870401" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+     ralateuid:{"tsina":"afmz"},hideMore:false}
+    
+  </script> 
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=
+1870401" charset="utf-8"></script>      
+
+	<div class="pagepart clearfix">
+ 
+	<a href="/2013/11/29/use-pic-form-your-flickr/" class="prev" title="从Flickr外链图片">从Flickr外链图片</a>
+ 
+ 
+	<a href="/2013/11/28/high-time-function/" class="next" title="High Time Function">High Time Function</a>
+ 
+</div>
+	
+
+<!-- Duoshuo Comment BEGIN -->
+<section class="comment">
+	<div class="ds-thread"></div>
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"mingzhe"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	</section>
+<!-- Duoshuo Comment END -->
+
+</div>  
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏">
         <i class="icon-menu"></i>
       </a></div>
