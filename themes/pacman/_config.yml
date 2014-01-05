@@ -9,7 +9,7 @@ widgets:
 - category
 - tag
 - weibo
-- rss
+# - rss
 
 excerpt_link: Read More
 
