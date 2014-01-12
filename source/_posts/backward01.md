@@ -2,7 +2,7 @@ title: 茗记（一）
 date: 2014-01-05 11:51:14
 description: "好多天不写博客就会是这种后果，积攒很多，都不知道说什么好了。所以弄了一个单独的系列，就叫“茗记”，希望能把这些不愿遗忘的事情，如茗一般记录下来。简记这次有“vim”，“koa”，“python可视化”，“gnuplot”。"
 category: 茗哲
-tags: [koa,爱技术,爱技术,博客,node.js,python,gnuplot]
+tags: [koa,爱技术,爱生活,博客,node.js,python,gnuplot]
 ---
 
 ## 还是这几天
