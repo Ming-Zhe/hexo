@@ -1,4 +1,4 @@
-title: iTerm2 configure color
+title: iTerm2 配色攻略
 date: 2014-01-12 22:31:12
 description: "终于把 iTerm 的配色搞完了，之前因时间不够半途而废了。网上有几个 iTerm 的配色教程，跟着试了试，都不行。终于找到了解决方案。"
 category: 所谓开发
