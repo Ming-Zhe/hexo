@@ -77,5 +77,7 @@ python确实相当强大，有各种库的支持，全球的开发者在为这�
 找到我：
 
 微博：http://weibo.com/afmz
+
 Github：http://github.com/Ming-Zhe
+
 E-mail：law.gravitys@gmail.com 

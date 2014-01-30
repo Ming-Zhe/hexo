@@ -44,5 +44,7 @@ Flickr给每个用户的容量是1TB，所以完全不用考虑容量不足这�
 找到我：
 
 微博：http://weibo.com/afmz
+
 Github：http://github.com/Ming-Zhe
+
 E-mail：law.gravitys@gmail.com 

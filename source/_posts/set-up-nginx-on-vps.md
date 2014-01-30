@@ -112,5 +112,7 @@ tags: [VPS,nginx,linux,博客,爱生活,爱技术]
 找到我：
 
 微博：http://weibo.com/afmz
+
 Github：http://github.com/Ming-Zhe
+
 E-mail：law.gravitys@gmail.com 

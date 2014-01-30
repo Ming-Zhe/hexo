@@ -172,5 +172,7 @@ koa 依赖支持 generator 的 Node 环境，也就是说，node的版本要在 
 找到我：
 
 微博：http://weibo.com/afmz
+
 Github：http://github.com/Ming-Zhe
+
 E-mail：law.gravitys@gmail.com 
