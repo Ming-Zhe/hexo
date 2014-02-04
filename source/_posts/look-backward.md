@@ -28,6 +28,8 @@ tags: [爱生活,爱技术,博客,book,look backward]
 
 当然，看书并不是全部内容，有机会把所有的项目也要拿出来，其实都在我的[github](http://github.com/ming-zhe)上，能来赏脸不胜欢迎。。。
 
+简单测试一下。
+
 <br/>
 
 ***
