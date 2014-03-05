@@ -24,7 +24,7 @@ tags: [爱生活,爱技术,博客,book,look backward]
 
 ![](http://farm4.staticflickr.com/3725/12220521944_28652218a7_b.jpg)
 
-最近只有两个任务，node.js还有iOS开发，另外穿插这一下服务器变成，nginx是我主要学习的。
+最近只有两个任务，node.js还有iOS开发，另外穿插这一下服务器相关技术，nginx是我主要学习的。
 
 当然，看书并不是全部内容，有机会把所有的项目也要拿出来，其实都在我的[github](http://github.com/ming-zhe)上，能来赏脸不胜欢迎。。。
 
