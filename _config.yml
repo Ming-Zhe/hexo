@@ -79,7 +79,7 @@ plugins:
 - hexo-generator-sitemap
 
 
-theme: pacman
+theme: strict
 exclude_generator:
 
 # Deployment
